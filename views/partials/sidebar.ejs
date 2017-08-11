@@ -1,0 +1,144 @@
+
+    <div class="ui right floated segment">
+         <div class="right-index">
+         <!--<h3 id="about">ABOUT ME</h3>-->
+         <!--<hr>-->
+         <!--<img src="http://i.imgur.com/LPfOGCx.jpg" id="avatar">-->
+         <!--<p>Vestibulum euismod eleifend neque a malesuada. Curabitur sem est, faucibus nec dui vel, placerat tempor est. Fusce et nulla magna. Morbi sodales sapien vitae nulla sollicitudin pellentesque. Curabitur non aliquam elit, eu pulvinar odio. Aenean sed pulvinar nisi, mollis finibus lectus. Aliquam tincidunt purus enim, sit amet convallis mi lobortis ac.</p>-->
+             <h3 id="about">POPULAR BLOGS</h3>
+             <hr>
+             <% var sortedByPopular = allBlogs %>
+             <% for(var i=1; i<sortedByPopular.length; i++){ %>
+                 <% var prePos = i-1 %>
+                 <% while(prePos >= 0 && sortedByPopular[prePos].likes + sortedByPopular[prePos].comments.length < sortedByPopular[prePos+1].likes + sortedByPopular[prePos+1].comments.length){ %>
+                     <% var temp = sortedByPopular[prePos] %>
+                     <% sortedByPopular[prePos] = sortedByPopular[prePos+1] %>
+                     <% sortedByPopular[prePos+1] = temp %>
+                     <% prePos-- %>
+                 <% } %>
+             <% } %>
+             <% if(sortedByPopular.length > 5){ %>
+                 <% for(var i=0; i<5; i++){ %>
+                       <div class="small-index">
+                           <img class="small-img" src="<%= sortedByPopular[i].image%>">
+                           <a class="small-header" href="/blogs/<%= sortedByPopular[i]._id %>"><%= sortedByPopular[i].title%></a>
+                       </div>    
+                 <% } %>
+             <% } %>
+         </div>
+         <div class="right-index">
+             <h3 id="about">RECENT BLOGS</h3>
+             <hr>
+             <% var sortedByDate = allBlogs %>
+             <% for(var i=1; i<sortedByDate.length; i++){ %>
+                 <% var prePos = i-1 %>
+                 <% while(prePos >= 0 && sortedByDate[prePos].created < sortedByDate[prePos+1].created){ %>
+                     <% var temp = sortedByDate[prePos] %>
+                     <% sortedByDate[prePos] = sortedByDate[prePos+1] %>
+                     <% sortedByDate[prePos+1] = temp %>
+                     <% prePos-- %>
+                 <% } %>
+             <% } %>
+             <% if(sortedByDate.length > 5){ %>
+                 <% for(var i=0; i<5; i++){ %>
+                       <div class="small-index">
+                           <img class="small-img" src="<%= sortedByDate[i].image%>">
+                           <a class="small-header" href="/blogs/<%= sortedByDate[i]._id %>"><%= sortedByDate[i].title%></a>
+                       </div>    
+                 <% } %>
+             <% } %>
+         </div>
+         <div class="right-index">
+             <h3 id="about">CATEGORIES</h3>
+             <hr>
+             <% var categories = new Array(20) %>
+             <% for(var i=0; i<20; i++){ %>
+                 <% categories[i] = 0 %>
+             <% } %>
+             <% allBlogs.forEach(function(blog){ %>
+                <% switch(blog.label){ 
+                     case "ADVENTURE": 
+                         categories[0]++;
+                         break;
+                     case "ANIMAL":
+                         categories[1]++; 
+                         break;
+                     case "ANIME":
+                         categories[2]++;
+                         break;
+                     case "BOOK":
+                         categories[3]++;
+                         break;
+                     case "BEAUTY": 
+                         categories[4]++;
+                         break;
+                     case "COOKING":
+                         categories[5]++;
+                         break;
+                     case "DIY":
+                         categories[6]++;
+                         break;
+                     case "EVENT":
+                         categories[7]++;
+                         break;
+                     case "FASHION": 
+                         categories[8]++;
+                         break;
+                     case "FEELING":
+                         categories[9]++;
+                         break;
+                     case "FOOD": 
+                         categories[10]++;
+                         break;
+                     case "GAME":
+                         categories[11]++;
+                         break;
+                     case "LEARNING": 
+                         categories[12]++;
+                         break;
+                     case "LIFESTYLE":
+                         categories[13]++;
+                         break;
+                     case "MANGA": 
+                         categories[14]++;
+                         break;
+                     case "MOVIE": 
+                         categories[15]++;
+                         break;
+                     case "MUSIC": 
+                         categories[16]++;
+                         break;
+                     case "SPORT":
+                         categories[17]++;
+                         break;
+                     case "STORY":
+                         categories[18]++;
+                         break;
+                     default: 
+                         categories[19]++;
+                 } %>
+             <% }) %>
+             <div class="item">
+                 <p><a href="/blogs/categories/adventure"><i class="caret right icon"></i>Adventure (<%= categories[0]%>)</a></p>
+                 <p><a href="/blogs/categories/animal"><i class="caret right icon"></i>Animal (<%= categories[1]%>)</a></p>
+                 <p><a href="/blogs/categories/anime"><i class="caret right icon"></i>Anime (<%= categories[2]%>)</a></p>
+                 <p><a href="/blogs/categories/book"><i class="caret right icon"></i>Book (<%= categories[3]%>)</a></p>
+                 <p><a href="/blogs/categories/beauty"><i class="caret right icon"></i>Beauty (<%= categories[4]%>)</a></p>
+                 <p><a href="/blogs/categories/cooking"><i class="caret right icon"></i>Cooking (<%= categories[5]%>)</a></p>
+                 <p><a href="/blogs/categories/diy"><i class="caret right icon"></i>DIY (<%= categories[6]%>)</a></p>
+                 <p><a href="/blogs/categories/event"><i class="caret right icon"></i>Event (<%= categories[7]%>)</a></p>
+                 <p><a href="/blogs/categories/fashion"><i class="caret right icon"></i>Fashion (<%= categories[8]%>)</a></p>
+                 <p><a href="/blogs/categories/feeling"><i class="caret right icon"></i>Feeling (<%= categories[9]%>)</a></p>
+                 <p><a href="/blogs/categories/food"><i class="caret right icon"></i>Food (<%= categories[10]%>)</a></p>
+                 <p><a href="/blogs/categories/game"><i class="caret right icon"></i>Game (<%= categories[11]%>)</a></p>
+                 <p><a href="/blogs/categories/learning"><i class="caret right icon"></i>Learning (<%= categories[12]%>)</a></p>
+                 <p><a href="/blogs/categories/lifestyle"><i class="caret right icon"></i>Lifestyle (<%= categories[13]%>)</a></p>
+                 <p><a href="/blogs/categories/manga"><i class="caret right icon"></i>Manga (<%= categories[14]%>)</a></p>
+                 <p><a href="/blogs/categories/movie"><i class="caret right icon"></i>Movie (<%= categories[15]%>)</a></p>
+                 <p><a href="/blogs/categories/music"><i class="caret right icon"></i>Music (<%= categories[16]%>)</a></p>
+                 <p><a href="/blogs/categories/sport"><i class="caret right icon"></i>Sport (<%= categories[17]%>)</a></p>
+                 <p><a href="/blogs/categories/story"><i class="caret right icon"></i>Story (<%= categories[18]%>)</a></p>
+                 <p><a href="/blogs/categories/travel"><i class="caret right icon"></i>Travel (<%= categories[19]%>)</a></p>
+             </div>
+         </div>
+     </div>

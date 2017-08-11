@@ -1,0 +1,75 @@
+<% include ../partials/header%>
+
+<div class="ui container">
+     <% var sortedByPopular = bloggers %>
+     <% for(var i=1; i<sortedByPopular.length; i++){ %>
+         <% var prePos = i-1 %>
+         <% while(prePos >= 0 && sortedByPopular[prePos].follower.length < sortedByPopular[prePos+1].follower.length){ %>
+             <% var temp = sortedByPopular[prePos] %>
+             <% sortedByPopular[prePos] = sortedByPopular[prePos+1] %>
+             <% sortedByPopular[prePos+1] = temp %>
+             <% prePos-- %>
+         <% } %>
+     <% } %>
+    <div class="ui horizontal list">
+      <h1>Top Popular Bloggers</h1>
+      <div class="item">
+        <span class="crown-silver">&#x2655</span>
+        <img class="ui tiny circular image" src="<%= sortedByPopular[1].avatar%>">
+        <div class="ui sub header" style="font-size: 1.3em;"><a href="/users/<%= sortedByPopular[1]._id%>"><%= sortedByPopular[1].username%></a></div>
+      </div>
+      <div class="item">
+        <span class="crown-gold">&#x2655</span>
+        <img class="ui small circular image" src="<%= sortedByPopular[0].avatar%>">
+        <div class="ui sub header" style="font-size: 1.3em;"><a href="/users/<%= sortedByPopular[0]._id%>"><%= sortedByPopular[0].username%></a></div>
+      </div>
+      <div class="item">
+        <span class="crown-bronze">&#x2655</span>
+        <img src="<%= sortedByPopular[2].avatar%>" class="ui tiny circular image">
+        <div class="ui sub header" style="font-size: 1.3em;"><a href="/users/<%= sortedByPopular[2]._id%>"><%= sortedByPopular[2].username%></a></div>
+      </div>
+      </div>
+      <div class="ui horizontal list" style="margin-bottom: 20px;">
+      <% for(var i=3; i<6; i++){ %>
+        <div class="item">
+          <img src="<%= sortedByPopular[i].avatar%>" class="ui mini circular image">
+          <div class="ui sub header"><a href="/users/<%= sortedByPopular[i]._id%>"><%= sortedByPopular[i].username%></a></div>
+        </div>
+      <% } %>
+    </div>
+    <div id="user-card" class="ui cards">
+        <% bloggers.forEach(function(blogger){ %>
+          <div class="card">
+            <div></div>
+            <div class="image">
+              <img src="<%= blogger.avatar%>">
+            </div>
+            <div class="content">
+              <div class="header"><a href="/users/<%= blogger._id%>"><%= blogger.username%></a>
+              <% if(currentUser){ %>
+                <% currentUser.following.forEach(function(following){ %>
+                  <% if(following.id.equals(blogger._id)){%>
+                    <i id="following" class='user icon'></i>
+                  <% } %>
+                <% }) %>
+              <% } %>
+              </div>
+              <div class="meta">
+                <p>Joined in <%= blogger.created.getMonth()+1%>/<%= blogger.created.getFullYear()%></p>
+              </div>
+            </div>
+            <div class="extra content">
+              <span class="right floated">
+                <%= blogger.blogs.length%> Blogs
+              </span>
+              <span>
+                <i class="user icon"></i>
+                <%= blogger.follower.length%> Followers
+              </span>
+            </div>
+          </div>
+        <% }) %>
+    </div>
+</div>
+
+<% include ../partials/footer%>

@@ -1,0 +1,32 @@
+<% include ../partials/header%>
+
+<div class="ui container">
+    <div class="ui divided items">
+        <% if(blogs.length > 0){ %>
+            <% blogs.forEach(function(result){ %>
+          <div class="item">
+            <div class="image">
+              <img src="<%= result.image%>">
+            </div>
+            <div class="content">
+              <a href="/blogs/<%= result._id%>" class="header"><%= result.title%></a>
+              <div class="meta">
+                <span class="cinema"><%= result.author.username%></span>
+                <span class="cinema"><%= result.created.toDateString()%></span>
+              </div>
+              <div class="description">
+                <p><%- result.body.substring(0, 100)%>...</p>
+              </div>
+              <div class="extra">
+                <div class="ui label"><%= result.label%></div>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+      <% }else{ %>
+          <p>Blog not found!</p>
+      <% } %>
+  </div>
+</div>
+
+<% include ../partials/footer%>

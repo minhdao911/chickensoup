@@ -1,0 +1,48 @@
+<% include ../partials/header%>
+
+<div class="ui main text container segment">
+    <div class="ui huge header">New Blog Post</div>
+    <form class="ui form" action="/blogs" method="POST">
+        <div class="field">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="Title" required>
+        </div>
+        <div class="field">
+            <label>Category</label>
+            <!--<input type="text" name="label" placeholder="Category" required>-->
+            <select name="label" class="ui fluid dropdown" required>
+                <option value="ADVENTURE">Adventure</option>
+                <option value="ANIMAL">Animal</option>
+                <option value="ANIME">Anime</option>
+                <option value="BOOK">Book</option>
+                <option value="BEAUTY">Beauty</option>
+                <option value="COOKING">Cooking</option>
+                <option value="DIY">DIY</option>
+                <option value="EVENT">Event</option>
+                <option value="FASHION">Fashion</option>
+                <option value="FEELING">Feeling</option>
+                <option value="FOOD">Food</option>
+                <option value="GAME">Game</option>
+                <option value="LEARNING">Learning</option>
+                <option value="LIFESTYLE">Lifestyle</option>
+                <option value="MANGA">Manga</option>
+                <option value="MOVIE">Movie</option>
+                <option value="MUSIC">Music</option>
+                <option value="SPORT">Sport</option>
+                <option value="STORY">Story</option>
+                <option value="TRAVEL">Travel</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Image</label>
+            <input type="text" name="image" placeholder="Image URL" required>
+        </div>
+        <div class="field">
+            <label>Blog Content</label>
+            <textarea name="body" required></textarea>
+        </div>
+        <input type="Submit" class="ui secondary button">
+    </form>
+</div>
+
+<% include ../partials/footer%>

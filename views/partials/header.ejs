@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Blog</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css?family=Bungee+Hairline|Cormorant:400,700|Jura:400,700" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.11/semantic.min.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/app.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+</html>
+    <body>
+        <div class="head-img">
+            <img src="http://i.imgur.com/MKiFD7G.png">
+        </div>
+        <div class="ui menu">
+            <div class="ui container" style="margin-top: 0;">
+                <div class="header item"><i class="code icon"></i>Blog Site</div>
+                <a class="item" href="/blogs">Home</a>
+                <a class="item" href="/blogs/new">New Post</a>
+                <div class="right menu">
+                    <div class="item">
+                      <div class="ui icon input">
+                          <form action="/search" method="GET">
+                              <input type="text" name="title" placeholder="Search By Title">
+                          </form>
+                          <i class="search link icon"></i>
+                      </div>
+                    </div>
+                    <a class="item" href="/users">Bloggers</a>
+                    <% if(!currentUser){ %>
+                        <a href="/login" class="ui item">
+                          Login
+                        </a>
+                        <a href="/register" class="ui item">
+                          Signup
+                        </a>
+                    <% }else{ %>
+                        <% if(currentUser.username==="admin"){ %>
+                            <a href="/users/<%= currentUser._id%>" class="ui item"><img id="top-ava" src="<%= currentUser.avatar%>">Welcome Back!</a>
+                        <% }else{ %>
+                            <a href="/users/<%= currentUser._id%>" class="ui item">
+                                <img id="top-ava" src="<%= currentUser.avatar%>">
+                                <% if(currentUser.feeds.length>0){ %>
+                                    <span class="ui blue circular label"><%= currentUser.feeds.length%></span>
+                                <% } %>
+                                Hello, <%= currentUser.username%>!
+                            </a>
+                        <% } %>
+                        <a href="/logout" class="ui item">
+                          Logout
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        
+        <div class="breakdown-nav">
+            <i id="left-bar-icon" class="sidebar icon"></i>
+            <i id="right-bar-icon" class="caret down icon"></i>
+        </div>
+        <div class="ui vertical menu nav">
+            <% if(currentUser){ %>
+                <a href="/users/<%= currentUser._id%>" class="item">
+                    <img id="top-ava" src="<%= currentUser.avatar%>">
+                    <% if(currentUser.feeds.length>0){ %>
+                        <span class="ui blue circular label"><%= currentUser.feeds.length%></span>
+                    <% } %>
+                    Hello, <%= currentUser.username%>!
+                </a>
+            <% } %>
+          <div class="item">
+            <div class="ui input">
+                <form action="/search" method="GET">
+                    <input id="input" type="text" name="title" placeholder="Search By Title">
+                </form>
+            </div>
+          </div>
+          <a href="/blogs" class="item">
+            Home
+          </a>
+          <a href="/blogs/new" class="item">
+            New Post
+          </a>
+          <a href="/users" class="item">
+            Bloggers
+          </a>
+          <% if(!currentUser){ %>
+            <a href="/login" class="ui item">
+              Login
+            </a>
+            <a href="/register" class="ui item">
+              Signup
+            </a>
+          <% }else{ %>
+            <a href="/logout" class="item">
+                Logout
+            </a>
+          <% } %>
+        </div>
+        
+        <div class="ui container" style="margin-top: 0">
+            <% if(error && error.length > 0){ %>
+                <div id="message" class="ui warning message">
+                  <i class="close icon"></i>
+                  <%= error %>
+                </div>
+            <% } %>
+            <% if(success && success.length > 0){ %>
+                <div id="message" class="ui success message">
+                  <i class="close icon"></i>
+                  <%= success%>
+                </div>
+            <% } %>
+        </div>
+        
+        

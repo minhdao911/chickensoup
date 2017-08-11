@@ -1,0 +1,61 @@
+
+<div class="ui container">
+    <div id="user-menu" class="ui segment">
+        <div class="ui card left-side">
+            <div class="image">
+              <% if(currentUser && user.username === currentUser.username) {%>
+                <div class="ui dimmer">
+                  <div class="content">
+                    <div class="center">
+                      <div class="ui button">
+                        <i class="edit icon"></i>
+                        Edit Image
+                      </div>
+                      <div class="ui icon input" style="display: none;">
+                        <form action="/users/<%= user._id%>/img?_method=PUT" method="POST">
+                          <input type="text" name="user[avatar]" placeholder="Image URL" required>
+                          <button><i class="circular checkmark link icon"></i></button>                        
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+              <img id="user-avatar" src="<%= user.avatar%>">
+            </div>
+            <div class="content">
+                <a class="header"><%= user.username%></a>
+                <div class="description">
+                  <p>Joined in <%= user.created.getMonth()+1%>/<%= user.created.getFullYear()%></p>
+                  <% var isFollowing; %>
+                  <% if(user.follower.length > 0 && currentUser){%>
+                    <% user.follower.forEach(function(followUser){ %>
+                      <% if(followUser.id.equals(currentUser._id)){%>
+                        <% isFollowing=true; %>
+                        <% return; %>
+                      <% } %>
+                    <% }); %>
+                  <% } %>
+                  <% if(currentUser && user.username !== currentUser.username){ %>
+                    <% if(!isFollowing){ %>
+                      <form action="/users/<%= user._id%>/<%= currentUser._id%>/follow?_method=PUT" method="POST">
+                        <button id="deactive" class="ui button"><i class='add user icon'></i>Following</button>
+                      </form>
+                    <% }else{ %>
+                      <form action="/users/<%= user._id%>/<%= currentUser._id%>/unfollow?_method=PUT" method="POST">
+                        <button id="active" class="ui button"><i class='user icon'></i>Followed</button>
+                      </form>
+                    <% } %>
+                  <% }else if(!currentUser){ %>
+                      <form action="/users/<%= user._id%>/12345asdfg/follow?_method=PUT" method="POST">
+                        <button id="deactive" class="ui button"><i class='add user icon'></i>Following</button>
+                      </form>
+                  <% } %>
+                </div>
+            </div>
+            <div class="extra content">
+                <a href="/users/<%= user._id%>/followers">
+                  <i class="user icon"></i>
+                  <%= user.follower.length%> Followers
+                </a>
+            </div>

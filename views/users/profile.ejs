@@ -1,0 +1,28 @@
+<% include ../partials/header%>
+
+<div class="ui main text container segment">
+    <div class="ui huge header">Edit Profile</div>
+    <form class="ui form" action="/users/<%= currentUser._id%>/profile" method="POST">
+        <div class="field">
+            <label>Avatar</label>
+            <input type="text" name="user[avatar]" value="<%= currentUser.avatar%>">
+        </div>
+        <div class="field">
+            <label>Slogan</label>
+            <input type="text" name="user[slogan]" value="<%= currentUser.slogan%>">
+        </div>
+        <div class="field">
+            <label>Short Description</label>
+            <textarea rows="4" name="user[description]"><%= currentUser.description%></textarea>
+        </div>
+        <div class="field">
+            <label>Interests</label>
+            <textarea rows="2" name="user[interests]" placeholder="List as many as you want"><%= currentUser.interests%></textarea>
+        </div>
+        <a href="/users/<%= currentUser._id%>" class="ui black button">Cancel</a>
+        <input type="Submit" class="ui secondary button">
+    </form>
+</div>
+
+<script type="text/javascript" src="/scripts/maintainscroll.jquery.min.js"></script>
+<% include ../partials/footer%>

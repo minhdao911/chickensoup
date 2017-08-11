@@ -1,0 +1,121 @@
+<% include ../partials/header%>
+
+<div class="ui container" style="margin-top: 0;">
+  
+  <% include ../partials/sidebar%>
+  
+  <div class="ui left floated segment">
+      <div id="post_header" class="ui huge header">
+        <%= blog.title%>
+        <p id="blog-author"><em>Posted by <a href="/users/<%= blog.author.id%>"><%= blog.author.username%></a></em></p>
+      </div>
+      <% if(currentUser && currentUser.username === blog.author.username){ %>
+      <div class="ui compact menu">
+        <div class="ui simple dropdown item" style="padding: 0 8px;">
+          <i class="wrench icon"></i>
+          <div class="menu">
+            <div class="item"><a href="/blogs/<%= blog._id%>/edit">Edit</a></div>
+            <div class="item">
+              <form action="/blogs/<%= blog._id%>?_method=DELETE" method="POST">
+                  <button id="delete">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+      <img id="post_img" class="ui centered image" src="<%= blog.image%>">
+      <div class="ui small label"><%= blog.created.toDateString()%></div>
+      <p><%- blog.body%></p>
+      <div class="ui breadcrumb">
+        <p class="section">Category</p>
+        <div class="divider"> / </div>
+        <div class="active section"><%= blog.label%></div>
+      </div>
+      <% if(currentUser) {%>
+        <% if(currentUser.likes.indexOf(blog._id) === -1) {%>
+          <form action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/addlike?_method=PUT" method="POST">
+            <input type="number" name="blog[likes]" value="<%= blog.likes+1%>" style="display:none;">
+            <span id="like"><%= blog.likes%> Like</span>
+            <button id="heart"><i class="heart icon"></i></button>
+          </form>
+        <% }else{ %>
+          <form action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/minuslike?_method=PUT" method="POST">
+            <input type="number" name="blog[likes]" value="<%= blog.likes-1%>" style="display:none;">
+            <span id="like"><%= blog.likes%> Like</span>
+            <button id="heart"><i class="heart icon red"></i></button>
+          </form>
+        <% } %>
+      <% }else{ %>
+        <form action="/blogs/<%= blog._id%>/users/12345/addlike?_method=PUT" method="POST">
+          <input type="number" name="blog[likes]" value="<%= blog.likes+1%>" style="display:none;">
+          <span id="like"><%= blog.likes%> Like</span>
+          <button id="heart"><i class="heart icon"></i></button>
+        </form>
+      <% } %>
+  </div>
+  <div class="ui left floated segment">
+    <div class="ui comments">
+      <h3 class="ui dividing header">Comments <i class="comments icon"></i></h3>
+      <%blog.comments.forEach(function(comment){ %>
+        <div class="comment">
+          <a class="avatar">
+            <img src="<%= comment.author.avatar%>">
+          </a>
+          <div class="content">
+            <a class="author"><%= comment.author.username%></a>
+            <div class="metadata">
+              <span class="date">
+                <% var currentTime = new Date() %>
+                <% if(comment.created.getMonth() === currentTime.getMonth()){ %>
+                  <% if(comment.created.getDate() === currentTime.getDate()){ %>
+                    <% if(comment.created.getHours()+3 >= 24){%>
+                      Today at <%= comment.created.getHours()+3-24%>:<%= comment.created.getMinutes()%>
+                    <% }else{ %>
+                      Today at <%= comment.created.getHours()+3%>:<%= comment.created.getMinutes()%>
+                    <% } %>
+                  <% }else if(currentTime.getDate() - comment.created.getDate() === 1){ %>
+                    Yesterday at <%= comment.created.getHours()+3%>:<%= comment.created.getMinutes()%>
+                  <% }else if(currentTime.getDate() - comment.created.getDate() < 8){ %>
+                    <%= currentTime.getDate() - comment.created.getDate()%> days ago
+                  <% } %>
+                <% }else{ %>
+                  <%= comment.created.getDate()%>/<%= comment.created.getMonth()+1%>/<%= comment.created.getFullYear()%>
+                <% } %>
+              </span>
+            </div>
+            <div class="text">
+                <%= comment.text%>
+            </div>
+            <% if(currentUser && comment.author.username === currentUser.username){ %>
+            <div class="actions">
+              <a class="reply edit-comment">Edit</a>
+              <a class="reply">
+                <form action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                  <button id="del-comment">Delete</button>
+                </form>
+              </a>
+            </div>
+            <form id="edit-form" class="ui reply form edit-form" action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=PUT" method="POST">
+              <div id="edit-comment-field" class="field">
+                <input type="text" name="comment[text]" placeholder="Edit comment" required>
+              </div>
+              <button class="ui secondary button right-btn" style="background: #b6e565;">Edit</button>
+              <a id="cancel" class="ui secondary button right-btn" style="background: #ff5b5b;">Cancel</a>
+            </form>
+            <% } %>
+          </div>
+        </div>
+      <% }); %>
+      <form id="add-comment-form" class="ui reply form" action="/blogs/<%= blog._id%>/comments" method="POST">
+        <div id="comment-field" class="field">
+          <input type="text" name="comment[text]" placeholder="Add comment" required>
+        </div>
+        <button id="add-comment-btn" class="ui secondary button right-btn"><i class="send icon"></i></button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="/scripts/maintainscroll.jquery.min.js"></script>
+<% include ../partials/footer%>

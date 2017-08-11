@@ -1,0 +1,32 @@
+<% include ../partials/header%>
+
+<div class="ui container" style="margin-top: 0">
+    
+    <% console.log("someone was here") %>
+    
+    <% include ../partials/sidebar%>
+    
+    <% blogs.forEach(function(blog){ %>
+        <div id="index" class="ui left floated segment">
+            <div class="content">
+                <div class="heading">
+                    <p class="heading-label"><%= blog.label.toUpperCase()%></p>
+                    <h2><a class="header" href="/blogs/<%= blog._id %>"><%= blog.title%></a></h2>
+                    <span class="time"><i class="wait icon"></i> <%= blog.created.toDateString()%></span>
+                    <span class="time"><i class="write icon"></i> <a href="/users/<%= blog.author.id%>"><%= blog.author.username%></a></span>
+                    <p><i class="circle icon"></i><i class="circle icon"></i><i class="circle icon"></i></p>
+                </div>
+            </div>
+            <img src="<%= blog.image%>">
+            <div class="index-content">
+                <p><%- blog.body.substring(0, 300)%>...</p>
+                <a href="/blogs/<%= blog._id%>" class="ui right floated button">
+                    Read More
+                    <i class="right chevron icon"></i>
+                </a>
+            </div>
+        </div>
+     <% }) %>
+ </div>
+
+<% include ../partials/footer%>
