@@ -104,12 +104,9 @@ body {
         min-width: 100%;
     }
     .floated.right.segment {
-        /*min-width: 300px;*/
         position: absolute;
         z-index: 999;
         background: white;
-        /*right: -302px;*/
-        /*display: none;*/
         right: 0;
         width: 0;
         overflow-x: hidden;
@@ -198,14 +195,6 @@ body {
         width: 100%;
     }
 }
-
-/*html, body, .floated.right.segment {*/
-/*    overflow-x: hidden;*/
-/*}*/
-
-/*body {*/
-/*    overflow-x: hidden;*/
-/*}*/
 
 .ui.container {
     margin-top: 14px;
@@ -315,7 +304,7 @@ div.dropdown {
 }
 
 #comment-field {
-    width: 85%;
+    width: 95%;
     float: left;
     margin-left: 10px;
 }
@@ -346,12 +335,8 @@ div.dropdown {
 }
 
 .floated.right.segment {
-    /*width: 25%;*/
     margin-left: 0;
-    /*padding: 30px;*/
     border: none;
-    /*padding-right: 10px;*/
-    /*padding-left: 20px;*/
     border-radius: 0;
 }
 
@@ -509,8 +494,9 @@ img.small-img {
     outline: none;
 }
 
-.heart.icon:hover {
+#heart-icon:hover {
     color: red;
+    cursor: pointer;
 }
 
 #top-ava {
@@ -580,10 +566,6 @@ img.small-img {
 .close {
     display: none;
 }
-
-/*#login-form {*/
-/*    margin-top: 60px;*/
-/*}*/
 
 #message {
     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
@@ -657,11 +639,9 @@ img.small-img {
 
 .ui.feed .event .close:hover {
     color: #56aaff;
+    cursor: pointer;
 }
 
-/*.ui.feed .event .content {*/
-/*    margin-left: 19px;*/
-/*}*/
 .ui.feed .event .content .meta {
     margin: 0;
 }
@@ -800,26 +780,20 @@ img.small-img {
     color: red;
 }
 
-/*#user-card .card {*/
-/*    width: 18.5%;*/
-/*}*/
-
 #user-card .card .image {
     width: 100%;
     max-height: 170px;
     overflow: hidden;
 }
 
+#user-avatar {
+    width: 100%;
+}
+
 #following {
     /*float: right;*/
     color: #56aaff;
 }
-
-/*.ui.item span.ui.blue.circular.label {*/
-/*    margin-left: -20px;*/
-/*    margin-top: -10px;*/
-/*    margin-right: 5px;*/
-/*}*/
 
 .ui.divided.items .item {
     background: white;
@@ -927,4 +901,13 @@ img.small-img {
 .ui.fluid.four.item.menu .item.third-element i{
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.ui.comments .comment .avatar {
+    max-height: 44px;
+    overflow: hidden;
+}
+
+.ui.item .change-color {
+    color: #56aaff;
 }
