@@ -3,43 +3,37 @@
   <% include ../partials/user-menu%>
 
             <div class="ui secondary vertical pointing menu">
-              <a href="/users/<%= user._id%>" class="item active">
+              <a class="item active">
                 Home
               </a>
-              <a href="/users/<%= user._id%>/blogs" class="item">
+              <a class="item">
                 Blogs
               </a>
               <% if(currentUser && user.username === currentUser.username) {%>
-                <a href="/users/<%= user._id%>/feeds" class="item third-element">
+                <a class="item third-element">
                   New Feed<span class="ui blue circular label"><%= currentUser.feeds.length%></span>
                 </a>
-                <!--<a href="/users/<%= user._id%>/messages" class="item">-->
-                <!--  Messages<span class="ui blue circular label">1</span>-->
-                <!--</a>-->
               <% } %>
-              <a href="/users/<%= user._id%>/following" class="item">
+              <a class="item">
                 Following
               </a>
             </div>
-            <!--<% if(currentUser && user.username !== currentUser.username) {%>-->
-            <!--  <a id="leave-mess-btn" class="ui button">Leave a message<i class="talk outline icon" style="margin-left: 3px;"></i></a>-->
-            <!--<% } %>-->
         </div>
         
         <% if(currentUser && user.username === currentUser.username) {%>
           <div class="ui fluid four item menu">
-            <a href="/users/<%= user._id%>" class="item" style="color: #56aaff;">Home</a>
-            <a href="/users/<%= user._id%>/blogs" class="item">Blogs</a>
-            <a href="/users/<%= user._id%>/feeds" class="item third-element">
+            <a class="item change-color">Home</a>
+            <a class="item">Blogs</a>
+            <a class="item third-element">
               New Feed<i class="ui blue circular label"><%= currentUser.feeds.length%></i>
             </a>
-            <a href="/users/<%= user._id%>/following" class="item">Following</a>
+            <a class="item">Following</a>
           </div>
         <% }else{ %>
           <div class="ui fluid three item menu">
-            <a href="/users/<%= user._id%>" class="item" style="color: #56aaff;">Home</a>
-            <a href="/users/<%= user._id%>/blogs" class="item">Blogs</a>
-            <a href="/users/<%= user._id%>/following" class="item">Following</a>
+            <a class="item change-color">Home</a>
+            <a class="item">Blogs</a>
+            <a class="item">Following</a>
           </div>
         <% } %>
         
@@ -55,11 +49,176 @@
                 <p><%- user.description%></p>
               <h3>Interests</h3>
                 <p><%- user.interests%></p>
-                <!--<a class="ui tag label">Travelling</a><a class="ui tag label">Guitar</a><a class="ui tag label">Sleeping</a>-->
             </div>
+        </div>
+        
+        <div id="blog" class="ui segment user-info" style="display: none;">
+            <div class="ui three column grid">
+              <% if(user.blogs.length > 0){ %>
+                <% user.blogs.forEach(function(blog){ %>
+                    <div class="column">
+                        <div class="ui fluid card">
+                            <div class="image">
+                                <img src="<%= blog.image%>">
+                            </div>
+                            <div class="content">
+                                <a class="header" href="/blogs/<%=blog._id%>"><%= blog.title%></a>
+                            </div>
+                        </div>
+                    </div>
+                  <% }); %>
+                <% }else{ %>
+                    <p>No blog</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <div id="feed" class="ui segment user-info" style="display: none;">
+            <div class="ui feed">
+            <% var feeds = user.feeds%>
+              <% if(feeds.length > 0){ %>
+                <% for(var i=feeds.length-1; i>-1; i--){ %>
+                <% if(feeds[i].content==="started following you"){%>
+                    <div class="event">
+                        <div class="label">
+                            <img src="<%= feeds[i].avatar%>">
+                        </div>
+                          <div class="content" onclick="location.href='/users/<%= feeds[i].user_id%>'">
+                              <div class="summary">
+                                  <a href="/users/<%= feeds[i].user_id%>" class="user">
+                                      <%= feeds[i].username%>
+                                  </a> <%= feeds[i].content%>
+                              </div>
+                              <div class="meta">
+                                <% var currentTime = new Date() %>
+                                <% if(feeds[i].created.getMonth() === currentTime.getMonth()){ %>
+                                  <% if(feeds[i].created.getDate() === currentTime.getDate()){ %>
+                                    <% if(feeds[i].created.getHours()+3 >= 24){%>
+                                      <p>Today at <%= feeds[i].created.getHours()-24%>:<%= feeds[i].created.getMinutes()%></p>
+                                    <% }else{ %>
+                                      <p>Today at <%= feeds[i].created.getHours()+3%>:<%= feeds[i].created.getMinutes()%></p>
+                                    <% } %>
+                                  <% }else if(currentTime.getDate() - feeds[i].created.getDate() === 1){ %>
+                                    <p>Yesterday at <%= feeds[i].created.getHours()+3%>:<%= feeds[i].created.getMinutes()%></p>
+                                  <% }else if(currentTime.getDate() - feeds[i].created.getDate() < 8){ %>
+                                    <p><%= currentTime.getDate() - feeds[i].created.getDate()%> days ago
+                                  <% } %>
+                                <% }else{ %>
+                                  <p><%= feeds[i].created.getDate()%>/<%= feeds[i].created.getMonth()+1%>/<%= feeds[i].created.getFullYear()%></p>
+                                <% } %>
+                              </div>
+                          </div>
+                        <form class="del-feed-form" action="/users/<%= user._id%>/<%= feeds[i]._id%>/delfeed?_method=PUT" method="POST">
+                          <button><i class="close icon"></i></button>
+                        </form>
+                    </div>
+                  <% }else{ %>
+                    <div class="event">
+                        <div class="label">
+                            <img src="<%= feeds[i].avatar%>">
+                        </div>
+                          <div class="content" onclick="location.href='/blogs/<%= feeds[i].blog_id%>'">
+                              <div class="summary">
+                                  <a href="/users/<%= feeds[i].user_id%>" class="user">
+                                      <%= feeds[i].username%>
+                                  </a> <%= feeds[i].content%>
+                              </div>
+                              <div class="meta">
+                                <% var currentTime = new Date() %>
+                                <% if(feeds[i].created.getMonth() === currentTime.getMonth()){ %>
+                                  <% if(feeds[i].created.getDate() === currentTime.getDate()){ %>
+                                    <% if(feeds[i].created.getHours()+3 >= 24){%>
+                                      <p>Today at <%= feeds[i].created.getHours()+3-24%>:<%= feeds[i].created.getMinutes()%></p>
+                                    <% }else{ %>
+                                      <p>Today at <%= feeds[i].created.getHours()+3%>:<%= feeds[i].created.getMinutes()%></p>
+                                    <% } %>
+                                  <% }else if(currentTime.getDate() - feeds[i].created.getDate() === 1){ %>
+                                    <p>Yesterday at <%= feeds[i].created.getHours()+3%>:<%= feeds[i].created.getMinutes()%></p>
+                                  <% }else if(currentTime.getDate() - feeds[i].created.getDate() < 8){ %>
+                                    <p><%= currentTime.getDate() - feeds[i].created.getDate()%> days ago
+                                  <% } %>
+                                <% }else{ %>
+                                  <p><%= feeds[i].created.getDate()%>/<%= feeds[i].created.getMonth()+1%>/<%= feeds[i].created.getFullYear()%></p>
+                                <% } %>
+                              </div>
+                          </div>
+                        <form class="del-feed-form" action="/users/<%= user._id%>/<%= feeds[i]._id%>/delfeed?_method=PUT" method="POST">
+                          <button><i class="close icon"></i></button>
+                        </form>
+                    </div>
+                  <% } %>
+                <% } %>
+              <% }else{ %>
+                <p>No feed</p>
+              <% } %>
+            </div>    
+        </div>
+        
+        <div id="follower" class="ui segment user-info" style="display: none;">
+          <div class="ui link cards">
+            <% if(user.follower.length > 0){ %>
+              <% user.follower.forEach(function(follower){ %>
+                <div class="card">
+                  <div></div>
+                  <img src="<%= follower.avatar%>">
+                  <div class="content">
+                    <div class="header center"><a href="/users/<%= follower.id%>"><%= follower.username%></a></div>
+                    <div class="meta center">
+                        <% user.following.forEach(function(following){%>
+                            <% if(following.id.equals(follower.id)){%>
+                                <a>Following</a>
+                            <% } %>
+                        <% }) %>
+                    </div>
+                  </div>
+                  <div class="extra content">
+                    <span class="right floated">
+                       <%= follower.blogs%> Blogs
+                    </span>
+                    <span>
+                      <i class="user icon"></i>
+                        <%= follower.follower%> Followers
+                    </span>
+                  </div>
+                </div>
+              <% }); %>
+            <% }else{ %>
+              <p>No follower</p>
+            <% } %>
+          </div>
+        </div>
+        
+        <div id="following" class="ui segment user-info" style="display: none;">
+          <% if(user.following.length > 0){ %>
+            <div class="ui link cards">
+              <% user.following.forEach(function(followUser){ %>
+                <div class="card">
+                  <div></div>
+                  <img src="<%= followUser.avatar%>">
+                  <div class="content">
+                    <div class="header center"><a href="/users/<%= followUser.id%>"><%= followUser.username%></a></div>
+                    <div class="meta center">
+                      <a>Following</a>
+                    </div>
+                  </div>
+                  <div class="extra content">
+                    <span class="right floated">
+                       <%= followUser.blogs%> Blogs
+                    </span>
+                    <span>
+                      <i class="user icon"></i>
+                        <%= followUser.follower%> Followers
+                    </span>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% }else{ %>
+            <p>No following</p>
+          <% } %>
         </div>
     </div>        
 </div>
 
-<script type="text/javascript" src="/scripts/maintainscroll.jquery.min.js"></script>
+<!--<script type="text/javascript" src="/scripts/maintainscroll.jquery.min.js"></script>-->
 <% include ../partials/footer%>

@@ -212,7 +212,7 @@ router.put("/:id/:currentUser_id/unfollow", function(req, res){
                 id: followerId, 
                 username: followerUsername,
                 avatar: followerAvatar,
-                followed: followerFollower,
+                follower: followerFollower,
                 blogs: followerBlogs
             }
             User.findById(req.params.id, function(err, followingUser){
@@ -239,7 +239,7 @@ router.put("/:id/:currentUser_id/unfollow", function(req, res){
                 id: followingId, 
                 username: followingUsername,
                 avatar: followingAvatar,
-                followed: followingFollower,
+                follower: followingFollower,
                 blogs: followingBlogs
             }
             User.findById(req.params.currentUser_id, function(err, followerUser){

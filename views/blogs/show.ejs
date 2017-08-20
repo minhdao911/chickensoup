@@ -98,7 +98,7 @@
             </div>
             <form id="edit-form" class="ui reply form edit-form" action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=PUT" method="POST">
               <div id="edit-comment-field" class="field">
-                <input type="text" name="comment[text]" placeholder="Edit comment" required>
+                <input type="text" name="comment[text]" placeholder="Edit comment" value="<%= comment.text%>" required>
               </div>
               <button class="ui secondary button right-btn" style="background: #b6e565;">Edit</button>
               <a id="cancel" class="ui secondary button right-btn" style="background: #ff5b5b;">Cancel</a>
