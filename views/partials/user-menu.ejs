@@ -12,7 +12,7 @@
                         Edit Image
                       </div>
                       <div class="ui icon input" style="display: none;">
-                        <form action="/users/<%= user._id%>/img?_method=PUT" method="POST">
+                        <form id="edit-img-form" action="/users/<%= user._id%>/img?_method=PUT" method="POST">
                           <input type="text" name="user[avatar]" placeholder="Image URL" required>
                           <button><i class="circular checkmark link icon"></i></button>                        
                         </form>
@@ -21,7 +21,9 @@
                   </div>
                 </div>
               <% } %>
-              <img id="user-avatar" src="<%= user.avatar%>">
+              <div class="user-avatar-div">
+                <img id="user-avatar" src="<%= user.avatar%>">
+              </div>
             </div>
             <div class="content">
                 <a class="header"><%= user.username%></a>
@@ -38,13 +40,17 @@
                   <% } %>
                   <% if(currentUser && user.username !== currentUser.username){ %>
                     <% if(!isFollowing){ %>
-                      <form action="/users/<%= user._id%>/<%= currentUser._id%>/follow?_method=PUT" method="POST">
-                        <button id="deactive" class="ui button"><i class='add user icon'></i>Following</button>
-                      </form>
+                      <div class=".follow-div">
+                        <form id="follow-form" action="/users/<%= user._id%>/<%= currentUser._id%>/follow?_method=PUT" method="POST">
+                          <button id="deactive" class="ui button"><i class='add user icon'></i>Following</button>
+                        </form>
+                      </div>
                     <% }else{ %>
-                      <form action="/users/<%= user._id%>/<%= currentUser._id%>/unfollow?_method=PUT" method="POST">
-                        <button id="active" class="ui button"><i class='user icon'></i>Followed</button>
-                      </form>
+                      <div class="follow-div">
+                        <form id="unfollow-form" action="/users/<%= user._id%>/<%= currentUser._id%>/unfollow?_method=PUT" method="POST">
+                          <button id="active" class="ui button"><i class='user icon'></i>Followed</button>
+                        </form>
+                      </div>
                     <% } %>
                   <% }else if(!currentUser){ %>
                       <form action="/users/<%= user._id%>/12345asdfg/follow?_method=PUT" method="POST">
@@ -54,7 +60,7 @@
                 </div>
             </div>
             <div class="extra content">
-                <a href="/users/<%= user._id%>/followers">
+                <a id="follower-btn">
                   <i class="user icon"></i>
                   <%= user.follower.length%> Followers
                 </a>
