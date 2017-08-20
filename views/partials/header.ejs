@@ -37,9 +37,11 @@
                         </a>
                     <% }else{ %>
                         <% if(currentUser.username==="admin"){ %>
-                            <a href="/users/<%= currentUser._id%>" class="ui item"><img id="top-ava" src="<%= currentUser.avatar%>">Welcome Back!</a>
+                            <a href="/users/<%= currentUser._id%>" class="ui item" id="user-item">
+                                <img id="top-ava" src="<%= currentUser.avatar%>">Welcome Back!
+                            </a>
                         <% }else{ %>
-                            <a href="/users/<%= currentUser._id%>" class="ui item">
+                            <a href="/users/<%= currentUser._id%>" class="ui item" id="user-item">
                                 <img id="top-ava" src="<%= currentUser.avatar%>">
                                 <% if(currentUser.feeds.length>0){ %>
                                     <span class="ui blue circular label"><%= currentUser.feeds.length%></span>
@@ -61,7 +63,7 @@
         </div>
         <div class="ui vertical menu nav">
             <% if(currentUser){ %>
-                <a href="/users/<%= currentUser._id%>" class="item">
+                <a href="/users/<%= currentUser._id%>" class="item user">
                     <img id="top-ava" src="<%= currentUser.avatar%>">
                     <% if(currentUser.feeds.length>0){ %>
                         <span class="ui blue circular label"><%= currentUser.feeds.length%></span>

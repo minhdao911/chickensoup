@@ -235,7 +235,6 @@ router.put("/:id/:currentUser_id/unfollow", function(req, res){
                             break;
                         }
                     }
-                    console.log("i1 "+ index);
                     followerUser.following.splice(index, 1);
                     followerUser.save();
                 }
@@ -266,7 +265,6 @@ router.put("/:id/:currentUser_id/unfollow", function(req, res){
                             break;
                         }
                     }
-                    console.log("index " + index);
                     followedUser.follower.splice(index, 1);
                     followedUser.save();
                     followedUser.follower.forEach(function(follower){
