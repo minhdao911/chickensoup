@@ -86,11 +86,11 @@ router.get("/:id/followers", function(req, res){
 
 //image update
 router.put("/:id/img", function(req, res){
-    User.findByIdAndUpdate(req.params.id, req.body.user, function(err, newUserImg){
+    User.findByIdAndUpdate(req.params.id, req.body.user, {new: true}, function(err, newUserImg){
         if(err){
             console.log(err);
         }else{
-            res.redirect("/users/" + req.params.id);
+            res.json(newUserImg);
         }
     });
 });
@@ -111,6 +111,33 @@ router.post("/:id/profile", function(req, res){
 
 //follow routes
 router.put("/:id/:currentUser_id/follow", middleware.isLoggedIn, function(req, res){
+    //add followingUser to currentUser
+    User.findById(req.params.currentUser_id, function(err, follower){
+        if(err){
+            console.log(err);
+        }else{
+            User.findById(req.params.id, function(err, followedUser){
+                if(err){
+                    console.log(err);
+                }else{
+                    var followedId = followedUser._id,
+                        followedUsername = followedUser.username,
+                        followedAvatar = followedUser.avatar,
+                        followedFollower = followedUser.follower.length + 1,
+                        followedBlogs = followedUser.blogs.length;
+                    var newFollowedUser = {
+                        id: followedId, 
+                        username: followedUsername,
+                        avatar: followedAvatar,
+                        follower: followedFollower,
+                        blogs: followedBlogs
+                    }
+                    follower.following.push(newFollowedUser);
+                    follower.save();
+                }
+            });
+        }
+    });
     //add currentUser to followingUser
     User.findById(req.params.id, function(err, followedUser){
         if(err){
@@ -144,25 +171,78 @@ router.put("/:id/:currentUser_id/follow", middleware.isLoggedIn, function(req, r
                     followedUser.feeds.push(newFeed);
                     followedUser.save();
                     followedUser.follower.forEach(function(follower){
-                        User.findById(follower.id, function(err, foundFollwer){
+                        User.findById(follower.id, function(err, foundFollower){
                             if(err){
                                 console.log(err);
                             }else{
-                                foundFollwer.following.forEach(function(following){
-                                    if(following.id.equals(followedUser._id)){
-                                        //console.log("follower" + following.follower);
-                                        following.follower++;
-                                    }
-                                });
-                                foundFollwer.save();
+                                //update number of followers for following users
+                                if(!follower.id.equals(req.params.currentUser_id)){
+                                    foundFollower.following.forEach(function(following){
+                                        if(following.id.equals(followedUser._id)){
+                                            following.follower = followedUser.follower.length;
+                                        }
+                                    });
+                                }
+                                foundFollower.save();
                             }
                         });
                     });
+                    followedUser.following.forEach(function(following){
+                        User.findById(following.id, function(err, foundFollowing){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                //update number of followers for followers
+                                foundFollowing.follower.forEach(function(follower){
+                                    if(follower.id.equals(followedUser._id)){
+                                        follower.follower = followedUser.follower.length;
+                                    }
+                                });
+                                foundFollowing.save();
+                            }
+                        });
+                    });
+                    res.json(followedUser);
                 }
             });
         }
+        
     });
-    //add followingUser to currentUser
+});
+
+//unfollow routes
+router.put("/:id/:currentUser_id/unfollow", function(req, res){
+    //remove following founduser from current user
+    User.findById(req.params.id, function(err, followedUser){
+        if(err){
+            console.log(err);
+        }else{
+            User.findById(req.params.currentUser_id, function(err, followerUser){
+                if(err){
+                    console.log(err);
+                }else{
+                    var followedUser_id;
+                    for(var i=0; i<followerUser.following.length; i++){
+                        if(followerUser.following[i].id.equals(followedUser._id)){
+                            followedUser_id = followerUser.following[i]._id;
+                            break;
+                        }
+                    }
+                    var index;
+                    for(var i=0; i<followerUser.following.length; i++){
+                        if(followerUser.following[i]._id === followedUser_id){
+                            index = i;
+                            break;
+                        }
+                    }
+                    console.log("i1 "+ index);
+                    followerUser.following.splice(index, 1);
+                    followerUser.save();
+                }
+            });
+        }
+    });    
+    //remove current user follower from founduser
     User.findById(req.params.currentUser_id, function(err, follower){
         if(err){
             console.log(err);
@@ -171,94 +251,61 @@ router.put("/:id/:currentUser_id/follow", middleware.isLoggedIn, function(req, r
                 if(err){
                     console.log(err);
                 }else{
-                    var followedId = followedUser._id,
-                        followedUsername = followedUser.username,
-                        followedAvatar = followedUser.avatar,
-                        followedFollower = followedUser.follower.length + 1,
-                        followedBlogs = followedUser.blogs.length;
-                    var newFollowedUser = {
-                        id: followedId, 
-                        username: followedUsername,
-                        avatar: followedAvatar,
-                        follower: followedFollower,
-                        blogs: followedBlogs
+                    //find current user from followers to remove
+                    var followerUser_id;
+                    for(var i=0; i<followedUser.follower.length; i++){
+                        if(followedUser.follower[i].id.equals(follower._id)){
+                            followerUser_id = followedUser.follower[i]._id;
+                            break;
+                        }
                     }
-                    follower.following.push(newFollowedUser);
-                    follower.save(function(err, savedUser){
-                        if(err){
-                            console.log(err);
-                        }else{
-                            res.redirect("back");
+                    var index;
+                    for(var i=0; i<followedUser.follower.length; i++){
+                        if(followedUser.follower[i]._id === followerUser_id){
+                            index = i;
+                            break;
                         }
+                    }
+                    console.log("index " + index);
+                    followedUser.follower.splice(index, 1);
+                    followedUser.save();
+                    followedUser.follower.forEach(function(follower){
+                        User.findById(follower.id, function(err, foundFollower){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                if(!follower.id.equals(req.params.currentUser_id)){
+                                    foundFollower.following.forEach(function(following){
+                                        if(following.id.equals(followedUser._id)){
+                                            //console.log("follower" + following.follower);
+                                            following.follower = followedUser.follower.length;
+                                        }
+                                    });
+                                }
+                                foundFollower.save();
+                            }
+                        });
                     });
+                    //update number of followers for following users
+                    followedUser.following.forEach(function(following){
+                        User.findById(following.id, function(err, foundFollowing){
+                            if(err){
+                                console.log(err);
+                            }else{
+                                foundFollowing.follower.forEach(function(follower){
+                                    if(follower.id.equals(followedUser._id)){
+                                        follower.follower = followedUser.follower.length;
+                                    }
+                                });
+                                foundFollowing.save();
+                            }
+                        });
+                    });
+                    res.json(followedUser);
                 }
             });
         }
     });
-});
-
-//unfollow routes
-router.put("/:id/:currentUser_id/unfollow", function(req, res){
-    User.findById(req.params.currentUser_id, function(err, follower){
-        if(err){
-            console.log(err);
-        }else{
-            var followerId = follower._id,
-                followerUsername = follower.username,
-                followerAvatar = follower.avatar,
-                followerFollower = follower.follower.length,
-                followerBlogs = follower.blogs.length;
-            var Follower = {
-                id: followerId, 
-                username: followerUsername,
-                avatar: followerAvatar,
-                follower: followerFollower,
-                blogs: followerBlogs
-            }
-            User.findById(req.params.id, function(err, followingUser){
-                if(err){
-                    console.log(err);
-                }else{
-                    var index = followingUser.follower.indexOf(Follower);
-                    followingUser.follower.splice(index, 1);
-                    followingUser.save();
-                }
-            });
-        }
-    });
-    User.findById(req.params.id, function(err, following){
-        if(err){
-            console.log(err);
-        }else{
-            var followingId = following._id,
-                followingUsername = following.username,
-                followingAvatar = following.avatar,
-                followingFollower = following.follower.length,
-                followingBlogs = following.blogs.length;
-            var Following = {
-                id: followingId, 
-                username: followingUsername,
-                avatar: followingAvatar,
-                follower: followingFollower,
-                blogs: followingBlogs
-            }
-            User.findById(req.params.currentUser_id, function(err, followerUser){
-                if(err){
-                    console.log(err);
-                }else{
-                    var index = followerUser.following.indexOf(Following);
-                    followerUser.following.splice(index, 1);
-                    followerUser.save(function(err, savedUser){
-                        if(err){
-                            console.log(err);
-                        }else{
-                            res.redirect("/users/" + req.params.id);
-                        }
-                    });
-                }
-            });
-        }
-    });    
 });
 
 //delete feed
@@ -277,11 +324,12 @@ router.put("/:id/:feed_id/delfeed", function(req, res){
                 if(err){
                     console.log(err);
                 }else{
-                    res.redirect("/users/" + req.params.id + "/feeds");
+                    res.json(foundUser);
                 }
             });
         }
     });
 });
+
 
 module.exports = router;
