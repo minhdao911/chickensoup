@@ -34,17 +34,21 @@
       </div>
       <% if(currentUser) {%>
         <% if(currentUser.likes.indexOf(blog._id) === -1) {%>
-          <form action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/addlike?_method=PUT" method="POST">
-            <input type="number" name="blog[likes]" value="<%= blog.likes+1%>" style="display:none;">
-            <span id="like"><%= blog.likes%> Like</span>
-            <button id="heart"><i class="heart icon"></i></button>
-          </form>
+          <div class="like-div">
+            <form class="add-like-form" action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/addlike?_method=PUT" method="POST">
+              <input type="number" name="blog[likes]" value="<%= blog.likes+1%>" style="display:none;">
+              <span id="like"><%= blog.likes%> Like</span>
+              <button id="heart"><i id="heart-icon" class="heart icon"></i></button>
+            </form>
+          </div>
         <% }else{ %>
-          <form action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/minuslike?_method=PUT" method="POST">
-            <input type="number" name="blog[likes]" value="<%= blog.likes-1%>" style="display:none;">
-            <span id="like"><%= blog.likes%> Like</span>
-            <button id="heart"><i class="heart icon red"></i></button>
-          </form>
+          <div class="like-div">
+            <form class="minus-like-form" action="/blogs/<%= blog._id%>/users/<%= currentUser._id%>/minuslike?_method=PUT" method="POST">
+              <input type="number" name="blog[likes]" value="<%= blog.likes-1%>" style="display:none;">
+              <span id="like"><%= blog.likes%> Like</span>
+              <button id="heart"><i id="heart-icon" class="heart icon red"></i></button>
+            </form>
+          </div>
         <% } %>
       <% }else{ %>
         <form action="/blogs/<%= blog._id%>/users/12345/addlike?_method=PUT" method="POST">
@@ -91,8 +95,8 @@
             <div class="actions">
               <a class="reply edit-comment">Edit</a>
               <a class="reply">
-                <form action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
-                  <button id="del-comment">Delete</button>
+                <form id="del-comment-form" action="/blogs/<%= blog._id%>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                  <button type="submit" id="del-comment">Delete</button>
                 </form>
               </a>
             </div>
@@ -107,13 +111,23 @@
           </div>
         </div>
       <% }); %>
+      
+    </div>
+    <% if(currentUser){%>
       <form id="add-comment-form" class="ui reply form" action="/blogs/<%= blog._id%>/comments" method="POST">
         <div id="comment-field" class="field">
-          <input type="text" name="comment[text]" placeholder="Add comment" required>
+          <input id="form-input" type="text" name="comment[text]" placeholder="Add comment" required>
         </div>
         <button id="add-comment-btn" class="ui secondary button right-btn"><i class="send icon"></i></button>
       </form>
-    </div>
+    <% }else{ %>
+      <form class="ui reply form" action="/blogs/<%= blog._id%>/comments" method="POST">
+        <div id="comment-field" class="field">
+          <input id="form-input" type="text" name="comment[text]" placeholder="Add comment" required>
+        </div>
+        <button id="add-comment-btn" class="ui secondary button right-btn"><i class="send icon"></i></button>
+      </form>
+    <% } %>
   </div>
 </div>
 
