@@ -2,7 +2,8 @@ var express = require("express"),
     router = express.Router(),
     Blog = require("../models/blog"),
     User = require("../models/user"),
-    middleware = require("../middleware");
+    middleware = require("../middleware"),
+    Comment = require("../models/comment");
 
 //----------------
 //BLOGS ROUTE
@@ -53,7 +54,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                             }else{
                                 foundFollowing.follower.forEach(function(follower){
                                     if(follower.id.equals(foundUser._id)){
-                                        //console.log("follower" + following.follower);
                                         follower.blogs++;
                                     }
                                 });
@@ -68,7 +68,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                             }else{
                                 foundFollower.following.forEach(function(following){
                                     if(following.id.equals(foundUser._id)){
-                                        //console.log("follower" + following.follower);
                                         following.blogs++;
                                     }
                                 });
@@ -81,7 +80,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                                     content: "posted a new blog '" + title + "'"
                                 };
                                 foundFollower.feeds.push(newFeed);
-                                // console.log("add feed");
                                 foundFollower.save();
                             }
                         });
@@ -148,6 +146,7 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
                 if(err){
                    console.log(err);
                }else{
+                   //update number of blogs to following users
                    foundUser.following.forEach(function(following){
                         User.findById(following.id, function(err, foundFollowing){
                             if(err){
@@ -155,7 +154,6 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
                             }else{
                                 foundFollowing.follower.forEach(function(follower){
                                     if(follower.id.equals(foundUser._id)){
-                                        //console.log("follower" + following.follower);
                                         follower.blogs--;
                                     }
                                 });
@@ -163,6 +161,7 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
                             }
                         });
                    });
+                   //update number of blogs to followers
                    foundUser.follower.forEach(function(follower){
                         User.findById(follower.id, function(err, foundFollower){
                             if(err){
@@ -170,7 +169,6 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
                             }else{
                                 foundFollower.following.forEach(function(following){
                                     if(following.id.equals(foundUser._id)){
-                                        //console.log("follower" + following.follower);
                                         following.blogs--;
                                     }
                                 });
@@ -187,7 +185,7 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
 
 //like route
 router.put("/:id/users/:user_id/addlike", middleware.isLoggedIn, function(req, res){
-    Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, blog){
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog, {new: true}, function(err, blog){
         if(err){
             console.log(err);
         }else{
@@ -212,17 +210,16 @@ router.put("/:id/users/:user_id/addlike", middleware.isLoggedIn, function(req, r
                             content: "liked your blog"
                         };
                     foundUser.feeds.push(newFeed);
-                    //console.log("add comment");
                     foundUser.save();
                 }
             });
-            res.redirect("/blogs/" + req.params.id);
+            res.json(blog);
         }
     });
 });
 
 router.put("/:id/users/:user_id/minuslike", middleware.isLoggedIn, function(req, res){
-    Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, blog){
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog, {new: true}, function(err, blog){
         if(err){
             console.log(err);
         }else{
@@ -238,7 +235,7 @@ router.put("/:id/users/:user_id/minuslike", middleware.isLoggedIn, function(req,
                     user.save();
                 }
             });
-            res.redirect("/blogs/" + req.params.id);
+            res.json(blog);
         }
     });
 });
