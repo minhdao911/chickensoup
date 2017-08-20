@@ -37,7 +37,6 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                                         content: "commented on your blog"
                                     };
                             foundUser.feeds.push(newFeed);
-                            //console.log("add comment");
                             foundUser.save();
                         }
                     });
@@ -46,7 +45,7 @@ router.post("/", middleware.isLoggedIn, function(req, res){
                         if(err){
                             console.log(err);
                         }else{
-                            res.redirect("/blogs/"+req.params.id);
+                            res.json(newComment);
                         }
                     });
                 }
@@ -58,14 +57,13 @@ router.post("/", middleware.isLoggedIn, function(req, res){
 //edit comment
 //update comment
 router.put("/:comment_id", middleware.checkCommentAuthorization, function(req, res){
-    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, {new: true}, function(err, updatedComment){
         if(err){
             console.log(err);
         }else{
-            res.redirect("/blogs/" + req.params.id);
+            res.json(updatedComment);
         }
     });
-    // res.send("edit comment route");
 });
 
 //delete comment
@@ -74,7 +72,7 @@ router.delete("/:comment_id", middleware.checkCommentAuthorization, function(req
         if(err){
             console.log(err);
         }else{
-            res.redirect("/blogs/" + req.params.id);
+            res.json(comment);
         }
     });
 });
