@@ -19,8 +19,10 @@ var blogRoutes       = require("./routes/blog"),
     categoriesRoutes = require("./routes/categories");
     
 // database config
-mongoose.connect("mongodb://localhost/chickensoup", {useMongoClient: true});
-
+//mongoose.connect("mongodb://localhost/chickensoup", {useMongoClient: true});
+var url = process.env.DATABASEURL || "mongodb://localhost/chickensoup";
+//mongoose.connect("mongodb://minhdao:chickensoup@ds153853.mlab.com:53853/chickensoupdb", {useMongoClient: true});
+mongoose.connect(url, {useMongoClient: true});
     
 // app config
 app.set("view engine", "ejs");
