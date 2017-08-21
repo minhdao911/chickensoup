@@ -458,13 +458,15 @@ $(".description").on("submit", "#follow-form", function(e){
     console.log($originalNum);
     var $originalFollower = $(this).parent().parent().parent().parent().siblings("#follower").children();
     console.log($originalFollower);
+    var $originalFeed = $(this).parent().parent().parent().parent().parent().parent().siblings(".ui.menu").children().children(".right.menu").children("#user-item").children("span");
     $.ajax({
         url: actionUrl,
         data: $data,
         type: 'PUT',
-        originalItem: [$originalBtn, $originalNum, $originalFollower],
+        originalItem: [$originalBtn, $originalNum, $originalFollower, $originalFeed],
         success: function(data){
             console.log(data);
+            //change button to unfollow
             this.originalItem[0].html(
             `
                 <form id="unfollow-form" action="${actionUrl.replace("follow", "unfollow")}" method="POST">
@@ -472,6 +474,7 @@ $(".description").on("submit", "#follow-form", function(e){
                 </form>
             `    
             );
+            //update number of followers
             this.originalItem[1].html(
             `
                 <a id="follower-btn">
@@ -491,6 +494,7 @@ $(".description").on("submit", "#follow-form", function(e){
             if(data.follower.length-1===0){
                 this.originalItem[2].html("");
             }
+            //add new card of new follower to the page
             this.originalItem[2].append(
             `
                 <div class="card">
@@ -514,6 +518,17 @@ $(".description").on("submit", "#follow-form", function(e){
                 </div>
             `    
             );
+            //update feed
+            // var link = this.originalItem[2].parent().attr("href");
+            // var userLink = "/users/"+data._id;
+            // console.log(userLink);
+            // if(link === userLink){
+            //     this.originalItem[2].html(
+            //     `
+            //         ${data.feeds.length}
+            //     `
+            //     );
+            // }
         }
     });
 });

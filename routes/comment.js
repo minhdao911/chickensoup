@@ -72,6 +72,21 @@ router.delete("/:comment_id", middleware.checkCommentAuthorization, function(req
         if(err){
             console.log(err);
         }else{
+            Blog.findById(req.params.id, function(err, foundBlog){
+                if(err){
+                    console.log(err);
+                }else{
+                    var index;
+                    for(var i=0; i<foundBlog.comments.length; i++){
+                        if(foundBlog.comments[i].equals(req.params.comment_id)){
+                            index = i;
+                            break;
+                        }
+                    }
+                    foundBlog.comments.splice(index, 1);
+                    foundBlog.save();
+                }
+            });
             res.json(comment);
         }
     });

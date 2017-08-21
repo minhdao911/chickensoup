@@ -146,6 +146,16 @@ router.delete("/:id", middleware.checkBlogAuthorization, function(req, res){
                 if(err){
                    console.log(err);
                }else{
+                   //remove blog from user database
+                   var index;
+                   for(var i=0; i<foundUser.blogs.length; i++){
+                       if(foundUser.blogs[i].equals(req.params.id)){
+                           index = i;
+                           break;
+                       }
+                   }
+                   foundUser.blogs.splice(index, 1);
+                   foundUser.save();
                    //update number of blogs to following users
                    foundUser.following.forEach(function(following){
                         User.findById(following.id, function(err, foundFollowing){
