@@ -86,11 +86,39 @@ router.get("/:id/followers", function(req, res){
 
 //image update
 router.put("/:id/img", function(req, res){
-    User.findByIdAndUpdate(req.params.id, req.body.user, {new: true}, function(err, newUserImg){
+    User.findByIdAndUpdate(req.params.id, req.body.user, {new: true}, function(err, newUser){
         if(err){
             console.log(err);
         }else{
-            res.json(newUserImg);
+            newUser.follower.forEach(function(follower){
+                User.findById(follower.id, function(err, foundFollower){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        foundFollower.following.forEach(function(following){
+                            if(following.id.equals(req.params.id)){
+                                following.avatar = newUser.avatar;
+                            }
+                        });
+                    }
+                    foundFollower.save();
+                });
+            });
+            newUser.following.forEach(function(following){
+                User.findById(following.id, function(err, foundFollowing){
+                    if(err){
+                        console.log(err);
+                    }else{
+                        foundFollowing.follower.forEach(function(follower){
+                            if(follower.id.equals(req.params.id)){
+                                follower.avatar = newUser.avatar;
+                            }
+                        });
+                    }
+                    foundFollowing.save();
+                });
+            });
+            res.json(newUser);
         }
     });
 });
