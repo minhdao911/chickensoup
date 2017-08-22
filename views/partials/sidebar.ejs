@@ -8,7 +8,7 @@
              <h3 id="about">POPULAR BLOGS</h3>
              <hr>
              <% var sortedByPopular = allBlogs %>
-             <% for(var i=1; i<sortedByPopular.length; i++){ %>
+             <% for(var i=1; i<allBlogs.length; i++){ %>
                  <% var prePos = i-1 %>
                  <% while(prePos >= 0 && sortedByPopular[prePos].likes + sortedByPopular[prePos].comments.length < sortedByPopular[prePos+1].likes + sortedByPopular[prePos+1].comments.length){ %>
                      <% var temp = sortedByPopular[prePos] %>
@@ -17,7 +17,7 @@
                      <% prePos-- %>
                  <% } %>
              <% } %>
-             <% if(sortedByPopular.length > 5){ %>
+             <% if(allBlogs.length > 5){ %>
                  <% for(var i=0; i<5; i++){ %>
                        <div class="small-index">
                            <img class="small-img" src="<%= sortedByPopular[i].image%>">
@@ -30,7 +30,7 @@
              <h3 id="about">RECENT BLOGS</h3>
              <hr>
              <% var sortedByDate = allBlogs %>
-             <% for(var i=1; i<sortedByDate.length; i++){ %>
+             <% for(var i=1; i<allBlogs.length; i++){ %>
                  <% var prePos = i-1 %>
                  <% while(prePos >= 0 && sortedByDate[prePos].created < sortedByDate[prePos+1].created){ %>
                      <% var temp = sortedByDate[prePos] %>
@@ -39,7 +39,7 @@
                      <% prePos-- %>
                  <% } %>
              <% } %>
-             <% if(sortedByDate.length > 5){ %>
+             <% if(allBlogs.length > 5){ %>
                  <% for(var i=0; i<5; i++){ %>
                        <div class="small-index">
                            <img class="small-img" src="<%= sortedByDate[i].image%>">

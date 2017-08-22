@@ -95,19 +95,17 @@ router.post("/", middleware.isLoggedIn, function(req, res){
 
 //show blog
 router.get("/:id", function(req, res){
-    var allBlogs;
-    Blog.find({}, function(err, allblogs){
-        if(err){
-            console.log(err);
-        }else{
-            allBlogs = allblogs;
-        }
-    });
     Blog.findById(req.params.id).populate("comments").exec(function(err, chosenBlog){
         if(err){
             console.log(err);
         }else{
-            res.render("blogs/show", {blog: chosenBlog, allBlogs: allBlogs});
+            Blog.find({}, function(err, allblogs){
+                if(err){
+                    console.log(err);
+                }else{
+                    res.render("blogs/show", {blog: chosenBlog, allBlogs: allblogs});
+                }
+            });
         }
     });
 });
