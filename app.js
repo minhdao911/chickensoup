@@ -52,69 +52,6 @@ app.use(function(req, res, next){
     next();
 });
 
-// Blog.create({
-//     title: "Nothing is forever",
-//     image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//     body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//     label: "FEELING"
-// });
-
-// var blogs = [
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         },
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         },
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         },
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         },
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         },
-//         {
-//             title: "Nothing is forever",
-//             image: "https://s-media-cache-ak0.pinimg.com/originals/f4/be/0b/f4be0b0d6fbbb4649b797aa24904505e.png",
-//             body: "Cause you never think the last time's going to be the last time - you think there will be more. You think you have forever, but you don't.",
-//             label: "FEELING"
-//         }
-//     ];
-    
-//     Blog.remove({}, function(err){
-//         if(err){
-//             console.log(err);
-//         }else{
-//             console.log("removed all campgrounds");
-//             blogs.forEach(function(blog){
-//                 Blog.create(blog, function(err, data){
-//                     if(err){
-//                         console.log(err);
-//                     }else{
-//                         console.log("added a new campground");
-//                     }
-//                 });
-//             });
-//         }
-//     });
-
 //routes
 app.use("/blogs", blogRoutes);
 app.use("/blogs/:id/comments", commentRoutes);
