@@ -1,5 +1,9 @@
 # chickensoup
-A responsive blogging website supporting posting, logging in, logging out, signing up, like, commenting, following,...
-Using NodeJS, Express, MongoDB (backend) and SemanticUI, Jquery (frontend)
+A responsive social blogging website supports user authorization, authentication and communications such as posting blogs,  commenting, liking, following, ranking and receiving notifications
 
-Deployed link: [https://chickensoupapp.herokuapp.com](https://chickensoupapp.herokuapp.com/)
+## Build With
+* [Nodejs](https://nodejs.org/en/)
+* [Express](https://expressjs.com/) 
+* [Mongoose](https://mongoosejs.com/) 
+* [SemanticUI](https://semantic-ui.com/) 
+* [Jquery](https://jquery.com/) 
